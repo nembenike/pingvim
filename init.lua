@@ -27,6 +27,40 @@ vim.opt.smartcase = true
 vim.g.mapleader = " " -- Set leader key to space
 vim.g.maplocalleader = " "
 
+-- Window split keymaps
+vim.api.nvim_set_keymap('n', '<leader>sv', ':vsplit<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>sh', ':split<CR>', { noremap = true, silent = true })
+
+-- Terminal functions with size control
+vim.cmd([[
+  function! OpenVerticalTerminal()
+    vsplit
+    vertical resize 80
+    terminal
+    startinsert
+  endfunction
+
+  function! OpenHorizontalTerminal()
+    rightbelow split
+    resize 15
+    terminal
+    startinsert
+  endfunction
+]])
+
+-- Terminal keymaps using the sizing functions
+vim.api.nvim_set_keymap('n', '<leader>tv', ':call OpenVerticalTerminal()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>th', ':call OpenHorizontalTerminal()<CR>', { noremap = true, silent = true })
+
+-- Terminal-specific settings
+vim.cmd([[
+  " Auto-enter insert mode when entering terminal
+  autocmd TermOpen * startinsert
+  
+  " Easy escape from terminal
+  tnoremap <Esc> <C-\><C-n>
+]])
+
 -- Install required Debian dependencies if on Debian-based OS
 if vim.fn.has("unix") == 1 then
     local os_name = io.popen("lsb_release -is"):read("*l")
